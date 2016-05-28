@@ -30,6 +30,7 @@ import java.util.concurrent.FutureTask;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
 
 import java.util.concurrent.atomic.AtomicLong;
@@ -61,6 +62,8 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
 
     private static final String SHUTDOWN_MESSAGE = "Thread pool is shutdown";
 
+    static final long IDLE_TIMEOUT = 10000;
+
     private final AccessControlContext mContext;
     private final ThreadGroup mGroup;
     private final AtomicLong mThreadNumber = new AtomicLong(1);
@@ -69,7 +72,6 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
     private final Thread.UncaughtExceptionHandler mHandler;
 
     private final int mMax;
-    private final long mIdleTimeout = 10000;
 
     // Pool is accessed like a stack.
     private final LinkedList<PooledThread> mPool;
@@ -519,7 +521,7 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
 
     private PooledThread startNewPooledThread(Runnable command) {
         PooledThread thread = new PooledThread
-            (mGroup, mNamePrefix + mThreadNumber.getAndIncrement(), mContext, command);
+            (mGroup, mNamePrefix + mThreadNumber.getAndIncrement(), mContext);
 
         if (thread.isDaemon() != mDaemon) {
             thread.setDaemon(mDaemon);
@@ -544,57 +546,45 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
             throw e;
         }
 
+        thread.setCommand(command);
+
         return thread;
     }
 
     private class PooledThread extends Thread {
         private final AccessControlContext mContext;
 
-        private Runnable mCommand;
-        private boolean mExiting;
+        private final SynchronousQueue<Runnable> mCommandQueue;
+        private volatile boolean mExiting;
 
-        public PooledThread(ThreadGroup group, String name,
-                            AccessControlContext context, Runnable command)
-        {
+        public PooledThread(ThreadGroup group, String name, AccessControlContext context) {
             super(group, null, name);
             mContext = context;
-            mCommand = command;
+            mCommandQueue = new SynchronousQueue<Runnable>();
         }
 
-        synchronized boolean setCommand(Runnable command) {
-            if (mCommand != null) {
-                throw new IllegalStateException("Command in pooled thread is already set");
-            }
-            if (mExiting) {
-                return false;
-            } else {
-                mCommand = command;
-                notify();
-                return true;
-            }
-        }
-
-        private synchronized Runnable waitForCommand() throws InterruptedException {
-            Runnable command;
-            
-            if ((command = mCommand) == null) {
-                long idle = mIdleTimeout;
-                
-                if (idle != 0) {
-                    if (idle < 0) {
-                        wait(0);
-                    } else {
-                        wait(idle);
+        boolean setCommand(Runnable command) {
+            try {
+                while (true) {
+                    if (mExiting) {
+                        return false;
+                    } else if (mCommandQueue.offer(command, 1, TimeUnit.MILLISECONDS)) {
+                        return true;
                     }
                 }
-                    
-                if ((command = mCommand) == null) {
-                    mExiting = true;
-                }
+            } catch (InterruptedException e) {
+                Thread.interrupted();
+                return false;
             }
+        }
 
-            mCommand = null;
-            return command;
+        private Runnable waitForCommand() throws InterruptedException {
+            Runnable command = mCommandQueue.poll(IDLE_TIMEOUT, TimeUnit.MILLISECONDS);
+            if (command != null) {
+                return command;
+            }
+            mExiting = true;
+            return null;
         }
 
         @Override
