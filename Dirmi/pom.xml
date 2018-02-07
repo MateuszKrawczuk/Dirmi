@@ -49,7 +49,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>4.9</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -60,22 +60,22 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.0</version>
+        <version>3.7.0</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>
       </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.0.0</version>
         <configuration>
-          <javadocVersion>1.7</javadocVersion>
+          <javadocVersion>1.8</javadocVersion>
           <detectJavaApiLink>false</detectJavaApiLink>
           <links>
-            <link>http://docs.oracle.com/javase/7/docs/api</link>
+            <link>http://docs.oracle.com/javase/8/docs/api</link>
           </links>
           <notimestamp>true</notimestamp>
         </configuration>
@@ -93,7 +93,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-source-plugin</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.1</version>
             <executions>
               <execution>
                 <id>attach-sources</id>
@@ -107,7 +107,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
-            <version>2.9.1</version>
+            <version>3.0.0</version>
             <executions>
               <execution>
                 <id>attach-javadocs</id>
@@ -121,7 +121,7 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.5</version>
+            <version>3.0.2</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -139,7 +139,7 @@
           <plugin>
             <groupId>org.sonatype.plugins</groupId>
             <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.3</version>
+            <version>1.6.8</version>
             <extensions>true</extensions>
             <configuration>
                <serverId>ossrh</serverId>
