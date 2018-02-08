@@ -377,11 +377,7 @@ public class RemoteIntrospector {
 
                 for (RMethod method : mMethods) {
                     String methodName = method.getName();
-                    Set<RMethod> set = methodsByName.get(methodName);
-                    if (set == null) {
-                        set = new LinkedHashSet<>();
-                        methodsByName.put(methodName, set);
-                    }
+                    Set<RMethod> set = methodsByName.computeIfAbsent(methodName, k -> new LinkedHashSet<>());
                     set.add(method);
                 }
 
