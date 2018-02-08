@@ -93,22 +93,20 @@ public class TestOrdering extends AbstractTestSuite {
 
         Thread[] threads = new Thread[10];
         for (int i=0; i<threads.length; i++) {
-            threads[i] = new Thread() {
-                public void run() {
-                    try {
-                        for (int j=0; j<count; j++) {
-                            synchronized (sequence) {
-                                ordered.doItAsync(sequence.incrementAndGet());
-                            }
-                            synchronized (sequence) {
-                                ordered.doIt(sequence.incrementAndGet());
-                            }
+            threads[i] = new Thread(() -> {
+                try {
+                    for (int j=0; j<count; j++) {
+                        synchronized (sequence) {
+                            ordered.doItAsync(sequence.incrementAndGet());
                         }
-                    } catch (Exception e) {
-                        ex.set(e);
+                        synchronized (sequence) {
+                            ordered.doIt(sequence.incrementAndGet());
+                        }
                     }
+                } catch (Exception e) {
+                    ex.set(e);
                 }
-            };
+            });
         }
 
         for (Thread t : threads) {
@@ -136,21 +134,19 @@ public class TestOrdering extends AbstractTestSuite {
 
         for (int s=1; s<=pipes.length; s++) {
             final int fs = s;
-            threads[s - 1] = new Thread() {
-                public void run() {
-                    try {
-                        Pipe pipe;
-                        synchronized (sequence) {
-                            pipe = ordered.doItPipe(null);
-                            pipes[fs - 1] = pipe;
-                            pipe.writeInt(sequence.incrementAndGet());
-                        }
-                        pipe.flush();
-                    } catch (Exception e) {
-                        ex.set(e);
+            threads[s - 1] = new Thread(() -> {
+                try {
+                    Pipe pipe;
+                    synchronized (sequence) {
+                        pipe = ordered.doItPipe(null);
+                        pipes[fs - 1] = pipe;
+                        pipe.writeInt(sequence.incrementAndGet());
                     }
+                    pipe.flush();
+                } catch (Exception e) {
+                    ex.set(e);
                 }
-            };
+            });
         }
 
         for (Thread t : threads) {

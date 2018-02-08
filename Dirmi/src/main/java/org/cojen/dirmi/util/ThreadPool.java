@@ -599,11 +599,9 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
 
         @Override
         public void run() {
-            AccessController.doPrivileged(new PrivilegedAction<Object>() {
-                public Object run() {
-                    run0();
-                    return null;
-                }
+            AccessController.doPrivileged((PrivilegedAction<Object>) () -> {
+                run0();
+                return null;
             }, mContext);
         }
 

@@ -107,11 +107,7 @@ abstract class SocketChannelConnector implements ChannelConnector {
 
         Socket socket;
         try {
-            socket = AccessController.doPrivileged(new PrivilegedExceptionAction<Socket>() {
-                public Socket run() throws IOException {
-                    return connectSocket(timeout, unit);
-                }
-            }, mContext);
+            socket = AccessController.doPrivileged((PrivilegedExceptionAction<Socket>) () -> connectSocket(timeout, unit), mContext);
         } catch (PrivilegedActionException e) {
             mConnected.checkClosed();
             throw (IOException) e.getCause();
@@ -131,27 +127,25 @@ abstract class SocketChannelConnector implements ChannelConnector {
     @Override
     public void connect(final Listener listener) {
         try {
-            mExecutor.execute(new Runnable() {
-                public void run() {
-                    if (mConnected.isClosed()) {
-                        listener.closed(new ClosedException());
-                        return;
-                    }
-
-                    Channel channel;
-                    try {
-                        channel = connect();
-                    } catch (IOException e) {
-                        if (mConnected.isClosed()) {
-                            listener.closed(e);
-                        } else {
-                            listener.failed(e);
-                        }
-                        return;
-                    }
-
-                    listener.connected(channel);
+            mExecutor.execute(() -> {
+                if (mConnected.isClosed()) {
+                    listener.closed(new ClosedException());
+                    return;
                 }
+
+                Channel channel;
+                try {
+                    channel = connect();
+                } catch (IOException e) {
+                    if (mConnected.isClosed()) {
+                        listener.closed(e);
+                    } else {
+                        listener.failed(e);
+                    }
+                    return;
+                }
+
+                listener.connected(channel);
             });
         } catch (RejectedException e) {
             listener.rejected(e);

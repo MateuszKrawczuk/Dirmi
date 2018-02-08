@@ -46,30 +46,28 @@ public class ResultSetRowFetcherServer implements ResultSetRowFetcher {
         mRowQueue = new ArrayBlockingQueue<>(1000);
 
         // FIXME: use thread pool
-        new Thread() {
-            public void run() {
+        new Thread(() -> {
+            try {
+                while (mResultSet.next()) {
+                    ResultSetRow row = new ResultSetRow(mResultSet, mMetaData);
+                    mRowQueue.put(row);
+                }
+                mRowQueue.put(NULL);
+                mRowQueue.put(NULL);
+            } catch (InterruptedException e) {
                 try {
-                    while (mResultSet.next()) {
-                        ResultSetRow row = new ResultSetRow(mResultSet, mMetaData);
-                        mRowQueue.put(row);
-                    }
                     mRowQueue.put(NULL);
+                    mRowQueue.put(new SQLException(e));
+                } catch (InterruptedException e2) {
+                }
+            } catch (SQLException e) {
+                try {
                     mRowQueue.put(NULL);
-                } catch (InterruptedException e) {
-                    try {
-                        mRowQueue.put(NULL);
-                        mRowQueue.put(new SQLException(e));
-                    } catch (InterruptedException e2) {
-                    }
-                } catch (SQLException e) {
-                    try {
-                        mRowQueue.put(NULL);
-                        mRowQueue.put(e);
-                    } catch (InterruptedException e2) {
-                    }
+                    mRowQueue.put(e);
+                } catch (InterruptedException e2) {
                 }
             }
-        }.start();
+        }).start();
     }
 
     public Pipe fetch(Pipe pipe) {

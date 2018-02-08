@@ -72,11 +72,7 @@ class NioRecyclableSocketChannel extends RecyclableSocketChannel {
 
     private void ready(final Channel.Listener listener) {
         try {
-            executor().execute(new Runnable() {
-                public void run() {
-                    listener.ready();
-                }
-            });
+            executor().execute(listener::ready);
         } catch (RejectedException e) {
             listener.rejected(e);
         }
@@ -84,11 +80,7 @@ class NioRecyclableSocketChannel extends RecyclableSocketChannel {
 
     private void closed(final Channel.Listener listener, final IOException cause) {
         try {
-            executor().execute(new Runnable() {
-                public void run() {
-                    listener.closed(cause);
-                }
-            });
+            executor().execute(() -> listener.closed(cause));
         } catch (RejectedException e) {
             listener.rejected(e);
         }

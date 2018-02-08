@@ -156,13 +156,11 @@ public class TestTimeouts extends AbstractTestSuite {
 
         // Verify that abnormal errors don't cause timeout exception.
 
-        env.executor().execute(new Runnable() {
-            public void run() {
-                try {
-                    sleep(1000);
-                    sessionStrategy.remoteSession.close();
-                } catch (Exception e) {
-                }
+        env.executor().execute(() -> {
+            try {
+                sleep(1000);
+                sessionStrategy.remoteSession.close();
+            } catch (Exception e) {
             }
         });
 

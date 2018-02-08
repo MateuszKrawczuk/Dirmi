@@ -51,12 +51,10 @@ public class TestThrottledExecutor {
 
         final AtomicBoolean started = new AtomicBoolean();
 
-        new Thread() {
-            public void run() {
-                started.set(true);
-                te.execute(new Task(10000));
-            }
-        }.start();
+        new Thread(() -> {
+            started.set(true);
+            te.execute(new Task(10000));
+        }).start();
 
         while (!started.get()) {
             Thread.sleep(1);
@@ -91,15 +89,13 @@ public class TestThrottledExecutor {
             final Task task = new Task(2500);
             tasks[i] = task;
 
-            threads[i] = new Thread() {
-                public void run() {
-                    try {
-                        te.execute(task);
-                    } catch (RejectedExecutionException e) {
-                        rejections.getAndIncrement();
-                    }
+            threads[i] = new Thread(() -> {
+                try {
+                    te.execute(task);
+                } catch (RejectedExecutionException e) {
+                    rejections.getAndIncrement();
                 }
-            };
+            });
         }
 
         for (Thread thread2 : threads) {

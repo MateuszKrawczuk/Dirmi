@@ -549,12 +549,8 @@ public class StandardSession implements Session {
                 // separate thread, to match the usual behavior.
                 final Link sessionLink = LinkWrapper.wrap(this);
                 try {
-                    mExecutor.execute(new Runnable() {
-                        public void run() {
-                            listener.closed(sessionLink,
-                                            (SessionCloseListener.Cause) mCloseListeners);
-                        }
-                    });
+                    mExecutor.execute(() -> listener.closed(sessionLink,
+                                    (SessionCloseListener.Cause) mCloseListeners));
                 } catch (RejectedException e) {
                     throw e.throwUncheckedException();
                 }
@@ -747,13 +743,11 @@ public class StandardSession implements Session {
         // Method should not block because it is called by finalize method, and
         // blocking the finalization thread prevents memory from being freed.
         try {
-            mExecutor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        mRemoteAdmin.sessionUnreferenced();
-                    } catch (RemoteException e) {
-                        // Ignore.
-                    }
+            mExecutor.execute(() -> {
+                try {
+                    mRemoteAdmin.sessionUnreferenced();
+                } catch (RemoteException e) {
+                    // Ignore.
                 }
             });
         } catch (RejectedException e) {
@@ -1061,45 +1055,43 @@ public class StandardSession implements Session {
     }
 
     void resumeAndReadRequestAsync(final InvocationChannel invChannel) throws RejectedException {
-        mExecutor.execute(new Runnable() {
-            public void run() {
-                if (!(invChannel instanceof InvocationChan)) {
-                    invChannel.disconnect();
-                    return;
-                }
-
-                InvocationChan chan = (InvocationChan) invChannel;
-
-                tryResume: {
-                    if (chan.inputResume()) {
-                        break tryResume;
-                    }
-                    if (chan.isResumeSupported()) {
-                        // Drain all extra client data.
-                        try {
-                            while (chan.skip(Integer.MAX_VALUE) > 0);
-                        } catch (IOException e) {
-                            chan.disconnect();
-                            return;
-                        }
-                    }
-                    if (chan.inputResume()) {
-                        break tryResume;
-                    }
-                    chan.disconnect();
-                    return;
-                }
-
-                // After reading EOF, ObjectInputStream is horked so replace it.
-                try {
-                    chan = new InvocationChan(chan);
-                } catch (IOException e) {
-                    chan.disconnect();
-                    return;
-                }
-
-                readRequest(chan);
+        mExecutor.execute(() -> {
+            if (!(invChannel instanceof InvocationChan)) {
+                invChannel.disconnect();
+                return;
             }
+
+            InvocationChan chan = (InvocationChan) invChannel;
+
+            tryResume: {
+                if (chan.inputResume()) {
+                    break tryResume;
+                }
+                if (chan.isResumeSupported()) {
+                    // Drain all extra client data.
+                    try {
+                        while (chan.skip(Integer.MAX_VALUE) > 0);
+                    } catch (IOException e) {
+                        chan.disconnect();
+                        return;
+                    }
+                }
+                if (chan.inputResume()) {
+                    break tryResume;
+                }
+                chan.disconnect();
+                return;
+            }
+
+            // After reading EOF, ObjectInputStream is horked so replace it.
+            try {
+                chan = new InvocationChan(chan);
+            } catch (IOException e) {
+                chan.disconnect();
+                return;
+            }
+
+            readRequest(chan);
         });
     }
 
@@ -1129,29 +1121,25 @@ public class StandardSession implements Session {
     InvocationChan toInvocationChannel(Channel channel, final boolean accepted)
         throws IOException
     {
-        Remote control = channel.installRecycler(new Channel.Recycler() {
-            public void recycled(final Channel channel) {
-                try {
-                    mExecutor.execute(new Runnable() {
-                        public void run() {
-                            InvocationChan invChannel;
-                            try {
-                                invChannel = toInvocationChannel(channel, accepted);
-                            } catch (IOException e) {
-                                channel.disconnect();
-                                return;
-                            }
+        Remote control = channel.installRecycler(channel1 -> {
+            try {
+                mExecutor.execute(() -> {
+                    InvocationChan invChannel;
+                    try {
+                        invChannel = toInvocationChannel(channel1, accepted);
+                    } catch (IOException e) {
+                        channel1.disconnect();
+                        return;
+                    }
 
-                            if (accepted) {
-                                readRequest(invChannel);
-                            } else {
-                                invChannel.recycle();
-                            }
-                        }
-                    });
-                } catch (RejectedException e) {
-                    channel.disconnect();
-                }
+                    if (accepted) {
+                        readRequest(invChannel);
+                    } else {
+                        invChannel.recycle();
+                    }
+                });
+            } catch (RejectedException e) {
+                channel1.disconnect();
             }
         });
 
@@ -1271,22 +1259,20 @@ public class StandardSession implements Session {
         }
 
         try {
-            mExecutor.execute(new Runnable() {
-                public void run() {
+            mExecutor.execute(() -> {
+                try {
                     try {
+                        mRemoteAdmin.ping();
+                    } catch (UnimplementedMethodException e) {
+                        // Fallback to another method for compatibility.
                         try {
-                            mRemoteAdmin.ping();
-                        } catch (UnimplementedMethodException e) {
-                            // Fallback to another method for compatibility.
-                            try {
-                                mRemoteAdmin.getRemoteInfo((Identifier) null);
-                            } catch (NullPointerException e2) {
-                                // Expected with null parameter.
-                            }
+                            mRemoteAdmin.getRemoteInfo((Identifier) null);
+                        } catch (NullPointerException e2) {
+                            // Expected with null parameter.
                         }
-                    } catch (RemoteException e) {
-                        closeOnFailure("Ping failure", e);
                     }
+                } catch (RemoteException e) {
+                    closeOnFailure("Ping failure", e);
                 }
             });
         } catch (RejectedException e) {
@@ -2083,19 +2069,17 @@ public class StandardSession implements Session {
 
             // Don't block caller while input is drained.
             try {
-                mExecutor.execute(new Runnable() {
-                    public void run() {
-                        try {
-                            if (inputResume(1, TimeUnit.SECONDS) && !isClosing()) {
-                                new InvocationChan(InvocationChan.this).addToPool();
-                                return;
-                            }
-                        } catch (IOException e) {
-                            // Ignore.
+                mExecutor.execute(() -> {
+                    try {
+                        if (inputResume(1, TimeUnit.SECONDS) && !isClosing()) {
+                            new InvocationChan(InvocationChan.this).addToPool();
+                            return;
                         }
-                        // Discard extra server data.
-                        disconnect();
+                    } catch (IOException e) {
+                        // Ignore.
                     }
+                    // Discard extra server data.
+                    disconnect();
                 });
             } catch (RejectedException e) {
                 disconnect();
@@ -2431,10 +2415,8 @@ public class StandardSession implements Session {
 
         @Override
         public <R extends Remote> R failedBatchedRemote(Class<R> type, final Throwable cause) {
-            InvocationHandler handler = new InvocationHandler() {
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                    throw cause;
-                }
+            InvocationHandler handler = (proxy, method, args) -> {
+                throw cause;
             };
 
             return (R) Proxy.newProxyInstance

@@ -235,13 +235,11 @@ public class Environment implements Closeable {
             new RecyclableSocketChannelSelector(mIOExecutor);
         addToClosableSet(selector);
 
-        mIOExecutor.execute(new Runnable() {
-            public void run() {
-                try {
-                    selector.selectLoop();
-                } catch (IOException e) {
-                    org.cojen.util.ThrowUnchecked.fire(e);
-                }
+        mIOExecutor.execute(() -> {
+            try {
+                selector.selectLoop();
+            } catch (IOException e) {
+                org.cojen.util.ThrowUnchecked.fire(e);
             }
         });
 

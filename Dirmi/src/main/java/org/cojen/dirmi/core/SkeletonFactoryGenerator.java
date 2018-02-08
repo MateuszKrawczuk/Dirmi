@@ -168,20 +168,18 @@ public class SkeletonFactoryGenerator<R extends Remote> {
             return EmptySkeletonFactory.THE;
         }
 
-        return AccessController.doPrivileged(new PrivilegedAction<SkeletonFactory<R>>() {
-            public SkeletonFactory<R> run() {
-                Class<? extends Skeleton> skeletonClass = generateSkeleton();
-                try {
-                    SkeletonFactory<R> factory = new Factory<>
-                            (skeletonClass.getConstructor
-                                    (VersionedIdentifier.class, SkeletonSupport.class, mType));
-                    mFactoryRef.set(factory);
-                    return factory;
-                } catch (NoSuchMethodException e) {
-                    NoSuchMethodError nsme = new NoSuchMethodError();
-                    nsme.initCause(e);
-                    throw nsme;
-                }
+        return AccessController.doPrivileged((PrivilegedAction<SkeletonFactory<R>>) () -> {
+            Class<? extends Skeleton> skeletonClass = generateSkeleton();
+            try {
+                SkeletonFactory<R> factory = new Factory<>
+                        (skeletonClass.getConstructor
+                                (VersionedIdentifier.class, SkeletonSupport.class, mType));
+                mFactoryRef.set(factory);
+                return factory;
+            } catch (NoSuchMethodException e) {
+                NoSuchMethodError nsme = new NoSuchMethodError();
+                nsme.initCause(e);
+                throw nsme;
             }
         });
     }

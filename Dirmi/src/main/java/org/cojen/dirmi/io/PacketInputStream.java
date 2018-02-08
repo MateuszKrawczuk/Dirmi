@@ -410,14 +410,12 @@ abstract class PacketInputStream<P extends PacketInputStream<P>> extends Channel
     @Override
     void inputNotify(IOExecutor executor, final Channel.Listener listener) {
         try {
-            executor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        fill();
-                        listener.ready();
-                    } catch (IOException e) {
-                        listener.closed(e);
-                    }
+            executor.execute(() -> {
+                try {
+                    fill();
+                    listener.ready();
+                } catch (IOException e) {
+                    listener.closed(e);
                 }
             });
         } catch (RejectedException e) {
@@ -480,11 +478,7 @@ abstract class PacketInputStream<P extends PacketInputStream<P>> extends Channel
 
                 if (packetSize >= 0) {
                     try {
-                        executor().execute(new Runnable() {
-                            public void run() {
-                                drain(in, Integer.MAX_VALUE);
-                            }
-                        });
+                        executor().execute(() -> drain(in, Integer.MAX_VALUE));
                         return;
                     } catch (RejectedException e) {
                         // Cannot recycle.

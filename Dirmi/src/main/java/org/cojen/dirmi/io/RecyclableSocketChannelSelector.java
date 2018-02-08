@@ -313,11 +313,7 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
             try {
                 try {
                     channel = AccessController
-                        .doPrivileged(new PrivilegedExceptionAction<SocketChannel>() {
-                            public SocketChannel run() throws IOException {
-                                return mChannel.accept();
-                            }
-                        }, mContext);
+                        .doPrivileged((PrivilegedExceptionAction<SocketChannel>) mChannel::accept, mContext);
                     channel.configureBlocking(false);
                 } catch (PrivilegedActionException e) {
                     throw (IOException) e.getCause();
@@ -584,16 +580,14 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
             try {
                 try {
                     sc = AccessController
-                        .doPrivileged(new PrivilegedExceptionAction<SocketChannel>() {
-                            public SocketChannel run() throws IOException {
-                                SocketChannel sc = SocketChannel.open();
-                                sc.configureBlocking(false);
-                                if (mLocalAddress != null) {
-                                    sc.socket().bind(mLocalAddress);
-                                }
-                                sc.connect(mRemoteAddress);
-                                return sc;
+                        .doPrivileged((PrivilegedExceptionAction<SocketChannel>) () -> {
+                            SocketChannel sc1 = SocketChannel.open();
+                            sc1.configureBlocking(false);
+                            if (mLocalAddress != null) {
+                                sc1.socket().bind(mLocalAddress);
                             }
+                            sc1.connect(mRemoteAddress);
+                            return sc1;
                         }, mContext);
                 } catch (PrivilegedActionException e) {
                     throw (IOException) e.getCause();

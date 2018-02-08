@@ -116,11 +116,7 @@ public class PipedChannelBroker implements ChannelBroker {
             (mExecutor, ain, aout, mBufferSize);
         channel.register(mAllChannels);
 
-        mExecutor.execute(new Runnable() {
-            public void run() {
-                mAcceptListenerQueue.dequeue().accepted(channel);
-            }
-        });
+        mExecutor.execute(() -> mAcceptListenerQueue.dequeue().accepted(channel));
     }
 
     @Override
@@ -136,18 +132,16 @@ public class PipedChannelBroker implements ChannelBroker {
     @Override
     public void connect(final ChannelConnector.Listener listener) {
         try {
-            mExecutor.execute(new Runnable() {
-                public void run() {
-                    Channel channel;
-                    try {
-                        channel = connect();
-                    } catch (IOException e) {
-                        listener.failed(e);
-                        return;
-                    }
-
-                    listener.connected(channel);
+            mExecutor.execute(() -> {
+                Channel channel;
+                try {
+                    channel = connect();
+                } catch (IOException e) {
+                    listener.failed(e);
+                    return;
                 }
+
+                listener.connected(channel);
             });
         } catch (RejectedException e) {
             listener.rejected(e);

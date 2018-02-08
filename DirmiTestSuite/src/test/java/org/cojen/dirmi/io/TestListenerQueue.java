@@ -84,53 +84,49 @@ public class TestListenerQueue {
 
         final AtomicInteger extraStop = new AtomicInteger();
 
-        Thread t1 = new Thread() {
-            public void run() {
-                Random rnd = new Random(12412343);
+        Thread t1 = new Thread(() -> {
+            Random rnd = new Random(12412343);
 
-                for (int i=0; i<count; i++) {
-                    ListenerImpl listener = new ListenerImpl();
-                    listeners.add(listener);
+            for (int i=0; i<count; i++) {
+                ListenerImpl listener = new ListenerImpl();
+                listeners.add(listener);
 
+                try {
+                    queue.enqueue(listener);
+                } catch (RejectedException e) {
+                    extraStop.getAndIncrement();
+                    queue.dequeue().stop();
+                }
+
+                if (rnd.nextInt(100) == 0) {
                     try {
-                        queue.enqueue(listener);
-                    } catch (RejectedException e) {
-                        extraStop.getAndIncrement();
-                        queue.dequeue().stop();
-                    }
-
-                    if (rnd.nextInt(100) == 0) {
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                        }
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
                     }
                 }
             }
-        };
+        });
 
-        Thread t2 = new Thread() {
-            public void run() {
-                Random rnd = new Random();
+        Thread t2 = new Thread(() -> {
+            Random rnd = new Random();
 
-                for (int i=0; i<count; i++) {
-                    Listener listener = queue.dequeue();
+            for (int i=0; i<count; i++) {
+                Listener listener = queue.dequeue();
 
-                    if ((i & 1) == 0) {
-                        listener.hello();
-                    } else {
-                        listener.stop();
-                    }
+                if ((i & 1) == 0) {
+                    listener.hello();
+                } else {
+                    listener.stop();
+                }
 
-                    if (rnd.nextInt(100) == 0) {
-                        try {
-                            Thread.sleep(1);
-                        } catch (InterruptedException e) {
-                        }
+                if (rnd.nextInt(100) == 0) {
+                    try {
+                        Thread.sleep(1);
+                    } catch (InterruptedException e) {
                     }
                 }
             }
-        };
+        });
 
         t1.start();
         t2.start();

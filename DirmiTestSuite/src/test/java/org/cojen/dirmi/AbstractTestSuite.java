@@ -33,16 +33,14 @@ public abstract class AbstractTestSuite {
 
     @BeforeClass
     public static void createEnv() {
-        env = new Environment(1000, null, new Thread.UncaughtExceptionHandler() {
-            public void uncaughtException(Thread t, Throwable e) {
-                synchronized (System.out) {
-                    System.out.println("Exception in thread \"" + t.getName() + "\" " + e);
-                    if (e instanceof java.io.InvalidClassException) {
-                        // Reduce output when testing broken serializable objects.
-                        return;
-                    }
-                    e.printStackTrace(System.out);
+        env = new Environment(1000, null, (t, e) -> {
+            synchronized (System.out) {
+                System.out.println("Exception in thread \"" + t.getName() + "\" " + e);
+                if (e instanceof java.io.InvalidClassException) {
+                    // Reduce output when testing broken serializable objects.
+                    return;
                 }
+                e.printStackTrace(System.out);
             }
         });
     }

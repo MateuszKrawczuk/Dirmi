@@ -161,12 +161,7 @@ class MersenneTwisterFast {
     private static final SecureRandom cSecureRandom = new SecureRandom();
 
     private static final ThreadLocal<MersenneTwisterFast> cLocalInstance =
-        new ThreadLocal<MersenneTwisterFast>() {
-            @Override
-            public MersenneTwisterFast initialValue() {
-                return newInstance();
-            }
-        };
+            ThreadLocal.withInitial(MersenneTwisterFast::newInstance);
 
     /**
      * Returns a new non-thread safe instance.

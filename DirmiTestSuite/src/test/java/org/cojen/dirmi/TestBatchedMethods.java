@@ -163,16 +163,14 @@ public class TestBatchedMethods extends AbstractTestSuite {
         server.startTask("one");
         assertNull(listener.dequeue(1000));
 
-        new Thread() {
-            public void run() {
-                try {
-                    server.startTask("two");
-                    server.syncNop();
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+        new Thread(() -> {
+            try {
+                server.startTask("two");
+                server.syncNop();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
-        }.start();
+        }).start();
 
         // Confirms that task one was not flushed.
         assertEquals("root", listener.dequeue(1000));

@@ -38,15 +38,13 @@ public abstract class SessionStrategy {
 
     public void tearDown() throws Exception {
         if (env != null) {
-            env.executor().execute(new Runnable() {
-                public void run() {
-                    if (remoteSession != null) {
-                        try {
-                            remoteSession.close();
-                        } catch (IOException e) {
-                        }
-                        remoteSession = null;
+            env.executor().execute(() -> {
+                if (remoteSession != null) {
+                    try {
+                        remoteSession.close();
+                    } catch (IOException e) {
                     }
+                    remoteSession = null;
                 }
             });
         }

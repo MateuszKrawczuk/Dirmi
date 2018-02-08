@@ -239,14 +239,12 @@ public class BufferedInputStream extends ChannelInputStream {
     @Override
     void inputNotify(IOExecutor executor, final Channel.Listener listener) {
         try {
-            executor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        fill();
-                        listener.ready();
-                    } catch (IOException e) {
-                        listener.closed(e);
-                    }
+            executor.execute(() -> {
+                try {
+                    fill();
+                    listener.ready();
+                } catch (IOException e) {
+                    listener.closed(e);
                 }
             });
         } catch (RejectedException e) {

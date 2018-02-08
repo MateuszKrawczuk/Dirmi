@@ -113,19 +113,17 @@ public class StubFactoryGenerator<R extends Remote> {
     }
 
     private StubFactory<R> generateFactory() {
-        return AccessController.doPrivileged(new PrivilegedAction<StubFactory<R>>() {
-            public StubFactory<R> run() {
-                Class<? extends R> stubClass = generateStub();
-                try {
-                    StubFactory<R> factory = new Factory<>
-                            (stubClass.getConstructor(StubSupport.class));
-                    mFactoryRef.set(factory);
-                    return factory;
-                } catch (NoSuchMethodException e) {
-                    NoSuchMethodError nsme = new NoSuchMethodError();
-                    nsme.initCause(e);
-                    throw nsme;
-                }
+        return AccessController.doPrivileged((PrivilegedAction<StubFactory<R>>) () -> {
+            Class<? extends R> stubClass = generateStub();
+            try {
+                StubFactory<R> factory = new Factory<>
+                        (stubClass.getConstructor(StubSupport.class));
+                mFactoryRef.set(factory);
+                return factory;
+            } catch (NoSuchMethodException e) {
+                NoSuchMethodError nsme = new NoSuchMethodError();
+                nsme.initCause(e);
+                throw nsme;
             }
         });
     }

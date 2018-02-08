@@ -261,11 +261,7 @@ public class BasicChannelBrokerAcceptor implements ChannelBrokerAcceptor {
                     // Keep it around for a bit, to avoid "No broker found"
                     // exceptions resulting from race conditions.
                     try {
-                        mExecutor.schedule(new Runnable() {
-                            public void run() {
-                                removeBroker(id, broker, true /* immediate*/);
-                            }
-                        }, 10, TimeUnit.SECONDS);
+                        mExecutor.schedule(() -> removeBroker(id, broker, true /* immediate*/), 10, TimeUnit.SECONDS);
                         return;
                     } catch (RejectedException e) {
                         // Fall through and remove now.

@@ -168,14 +168,12 @@ public class BufferedOutputStream extends ChannelOutputStream {
     @Override
     void outputNotify(IOExecutor executor, final Channel.Listener listener) {
         try {
-            executor.execute(new Runnable() {
-                public void run() {
-                    try {
-                        drain();
-                        listener.ready();
-                    } catch (IOException e) {
-                        listener.closed(e);
-                    }
+            executor.execute(() -> {
+                try {
+                    drain();
+                    listener.ready();
+                } catch (IOException e) {
+                    listener.closed(e);
                 }
             });
         } catch (RejectedException e) {

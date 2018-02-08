@@ -127,38 +127,36 @@ abstract class SocketChannelAcceptor implements ChannelAcceptor {
     @Override
     public void accept(final Listener listener) {
         try {
-            mExecutor.execute(new Runnable() {
-                public void run() {
-                    if (mAccepted.isClosed()) {
-                        listener.closed(new ClosedException());
-                        return;
-                    }
-
-                    Channel channel;
-                    try {
-                        try {
-                            channel = accept();
-                            mAnyAccepted = true;
-                        } catch (SSLException e) {
-                            if (!mAnyAccepted && e.getClass() == SSLException.class) {
-                                // General SSL exception upon first accept
-                                // indicates SSL subsystem is not configured
-                                // correctly.
-                                close();
-                            }
-                            throw e;
-                        }
-                    } catch (IOException e) {
-                        if (mAccepted.isClosed()) {
-                            listener.closed(e);
-                        } else {
-                            listener.failed(e);
-                        }
-                        return;
-                    }
-
-                    listener.accepted(channel);
+            mExecutor.execute(() -> {
+                if (mAccepted.isClosed()) {
+                    listener.closed(new ClosedException());
+                    return;
                 }
+
+                Channel channel;
+                try {
+                    try {
+                        channel = accept();
+                        mAnyAccepted = true;
+                    } catch (SSLException e) {
+                        if (!mAnyAccepted && e.getClass() == SSLException.class) {
+                            // General SSL exception upon first accept
+                            // indicates SSL subsystem is not configured
+                            // correctly.
+                            close();
+                        }
+                        throw e;
+                    }
+                } catch (IOException e) {
+                    if (mAccepted.isClosed()) {
+                        listener.closed(e);
+                    } else {
+                        listener.failed(e);
+                    }
+                    return;
+                }
+
+                listener.accepted(channel);
             });
         } catch (RejectedException e) {
             listener.rejected(e);
@@ -193,11 +191,7 @@ abstract class SocketChannelAcceptor implements ChannelAcceptor {
 
     private Socket acceptSocket() throws IOException {
         try {
-            return AccessController.doPrivileged(new PrivilegedExceptionAction<Socket>() {
-                public Socket run() throws IOException {
-                    return mServerSocket.accept();
-                }
-            }, mContext);
+            return AccessController.doPrivileged((PrivilegedExceptionAction<Socket>) mServerSocket::accept, mContext);
         } catch (PrivilegedActionException e) {
             throw (IOException) e.getCause();
         }
