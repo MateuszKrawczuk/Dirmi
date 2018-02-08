@@ -89,7 +89,7 @@ public class StubFactoryGenerator<R extends Remote> {
         synchronized (cCache) {
             StubFactory<R> factory = (StubFactory<R>) cCache.get(key);
             if (factory == null) {
-                factory = new StubFactoryGenerator<R>(type, remoteInfo)
+                factory = new StubFactoryGenerator<>(type, remoteInfo)
                     .generateFactory();
                 cCache.put(key, factory);
             }
@@ -101,7 +101,7 @@ public class StubFactoryGenerator<R extends Remote> {
     private final RemoteInfo mLocalInfo;
     private final RemoteInfo mRemoteInfo;
 
-    private final AtomicReference<Object> mFactoryRef = new AtomicReference<Object>();
+    private final AtomicReference<Object> mFactoryRef = new AtomicReference<>();
 
     private StubFactoryGenerator(Class<R> type, RemoteInfo remoteInfo) {
         mType = type;
@@ -117,8 +117,8 @@ public class StubFactoryGenerator<R extends Remote> {
             public StubFactory<R> run() {
                 Class<? extends R> stubClass = generateStub();
                 try {
-                    StubFactory<R> factory = new Factory<R>
-                        (stubClass.getConstructor(StubSupport.class));
+                    StubFactory<R> factory = new Factory<>
+                            (stubClass.getConstructor(StubSupport.class));
                     mFactoryRef.set(factory);
                     return factory;
                 } catch (NoSuchMethodException e) {

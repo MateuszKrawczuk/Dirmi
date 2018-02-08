@@ -38,7 +38,7 @@ abstract class IdentifierStore<I extends AbstractIdentifier> {
     private final Cache<I, Object> mIdentifiersToObjects;
 
     public IdentifierStore() {
-        mIdentifiers = new WeakCanonicalSet<I>();
+        mIdentifiers = new WeakCanonicalSet<>();
 
         mObjectsToIdentifiers = Cache.newWeakIdentityCache(17);
         mIdentifiersToObjects = Cache.newWeakValueCache(17);

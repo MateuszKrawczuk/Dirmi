@@ -91,7 +91,7 @@ public class TestCompletions extends AbstractTestSuite {
     public void failCommandCompletion() throws Exception {
         RemoteCompletions server = (RemoteCompletions) sessionStrategy.remoteServer;
 
-        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<Completion<String>>();
+        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<>();
 
         Completion<String> completion = server.failCommand2(1000, "hello");
         assertFalse(completion.isDone());
@@ -118,7 +118,7 @@ public class TestCompletions extends AbstractTestSuite {
     public void failCommandCompletionLateRegister() throws Exception {
         RemoteCompletions server = (RemoteCompletions) sessionStrategy.remoteServer;
 
-        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<Completion<String>>();
+        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<>();
         Completion<String> completion = server.failCommand2(100, "hello");
         sleep(1000);
         completion.register(queue);
@@ -182,7 +182,7 @@ public class TestCompletions extends AbstractTestSuite {
         assertEquals("world", server.runCommand2(0, "world").get());
         assertEquals("world!", server.runCommand2(100, "world!").get());
 
-        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<Completion<String>>();
+        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<>();
 
         final int count = 100;
         for (int i=0; i<count; i++) {
@@ -191,7 +191,7 @@ public class TestCompletions extends AbstractTestSuite {
             sleep(10);
         }
 
-        Set<String> received = new HashSet<String>();
+        Set<String> received = new HashSet<>();
 
         while (true) {
             completion = queue.poll(500, TimeUnit.MILLISECONDS);
@@ -208,7 +208,7 @@ public class TestCompletions extends AbstractTestSuite {
     public void runCommandCompletionLateRegister() throws Exception {
         RemoteCompletions server = (RemoteCompletions) sessionStrategy.remoteServer;
 
-        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<Completion<String>>();
+        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<>();
         Completion<String> completion = server.runCommand2(100, "hello");
         sleep(1000);
         completion.register(queue);
@@ -224,7 +224,7 @@ public class TestCompletions extends AbstractTestSuite {
         RemoteCompletions server = (RemoteCompletions) sessionStrategy.remoteServer;
 
         Completion<String> completion;
-        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<Completion<String>>();
+        BlockingQueue<Completion<String>> queue = new LinkedBlockingQueue<>();
 
         final int count = 100;
         for (int i=0; i<count; i++) {
@@ -233,7 +233,7 @@ public class TestCompletions extends AbstractTestSuite {
             sleep(10);
         }
 
-        Set<String> received = new HashSet<String>();
+        Set<String> received = new HashSet<>();
 
         while (true) {
             completion = queue.poll(500, TimeUnit.MILLISECONDS);

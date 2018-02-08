@@ -69,10 +69,10 @@ public class BasicChannelBrokerAcceptor implements ChannelBrokerAcceptor {
         mExecutor = executor;
         mAcceptor = acceptor;
         mRandom = new SecureRandom();
-        mAcceptedBrokers = new HashMap<Long, Broker>();
+        mAcceptedBrokers = new HashMap<>();
 
-        mAcceptListenerQueue = new ListenerQueue<ChannelBrokerAcceptor.Listener>
-            (mExecutor, ChannelBrokerAcceptor.Listener.class);
+        mAcceptListenerQueue = new ListenerQueue<>
+                (mExecutor, ChannelBrokerAcceptor.Listener.class);
 
         mBrokerListener = new ChannelAcceptor.Listener() {
             public void accepted(Channel channel) {
@@ -167,7 +167,7 @@ public class BasicChannelBrokerAcceptor implements ChannelBrokerAcceptor {
             Map<Long, Broker> copy;
             synchronized (mAcceptedBrokers) {
                 mClosed = true;
-                copy = new HashMap<Long, Broker>(mAcceptedBrokers);
+                copy = new HashMap<>(mAcceptedBrokers);
                 mAcceptedBrokers.clear();
             }
 
@@ -282,8 +282,8 @@ public class BasicChannelBrokerAcceptor implements ChannelBrokerAcceptor {
 
         Broker(long id, Channel control) throws RejectedException {
             super(mExecutor, id, control);
-            mListenerQueue = new ListenerQueue<ChannelConnector.Listener>
-                (mExecutor, ChannelConnector.Listener.class);
+            mListenerQueue = new ListenerQueue<>
+                    (mExecutor, ChannelConnector.Listener.class);
 
             mControl.inputNotify(new Channel.Listener() {
                 public void ready() {

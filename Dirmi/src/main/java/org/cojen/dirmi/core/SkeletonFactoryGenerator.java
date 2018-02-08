@@ -99,7 +99,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
         synchronized (cCache) {
             SkeletonFactory<R> factory = (SkeletonFactory<R>) cCache.get(key);
             if (factory == null) {
-                factory = new SkeletonFactoryGenerator<R>(localInfo, type).generateFactory();
+                factory = new SkeletonFactoryGenerator<>(localInfo, type).generateFactory();
                 cCache.put(key, factory);
             }
             return factory;
@@ -122,7 +122,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
         synchronized (cCache) {
             SkeletonFactory<R> factory = (SkeletonFactory<R>) cCache.get(key);
             if (factory == null) {
-                factory = new SkeletonFactoryGenerator<R>(type, remoteInfo).generateFactory();
+                factory = new SkeletonFactoryGenerator<>(type, remoteInfo).generateFactory();
                 cCache.put(key, factory);
             }
             return factory;
@@ -136,7 +136,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
     // Is set only if mLocalInfo is null.
     private final String mMalformedInfoMessage;
 
-    private final AtomicReference<Object> mFactoryRef = new AtomicReference<Object>();
+    private final AtomicReference<Object> mFactoryRef = new AtomicReference<>();
 
     private SkeletonFactoryGenerator(RemoteInfo localInfo, Class<R> type) {
         mType = type;
@@ -172,9 +172,9 @@ public class SkeletonFactoryGenerator<R extends Remote> {
             public SkeletonFactory<R> run() {
                 Class<? extends Skeleton> skeletonClass = generateSkeleton();
                 try {
-                    SkeletonFactory<R> factory = new Factory<R>
-                        (skeletonClass.getConstructor
-                         (VersionedIdentifier.class, SkeletonSupport.class, mType));
+                    SkeletonFactory<R> factory = new Factory<>
+                            (skeletonClass.getConstructor
+                                    (VersionedIdentifier.class, SkeletonSupport.class, mType));
                     mFactoryRef.set(factory);
                     return factory;
                 } catch (NoSuchMethodException e) {
@@ -229,7 +229,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
         // Create a switch statement that operates on method ids.
 
         Map<Integer, RemoteMethod> caseMap =
-            new LinkedHashMap<Integer, RemoteMethod>(methods.size());
+                new LinkedHashMap<>(methods.size());
         boolean hasOrderedMethods = false;
         boolean hasDisposer = false;
         for (RemoteMethod method : methods) {
@@ -258,7 +258,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
 
         // Generate case for each method.
 
-        Map<String, Integer> methodNames = new LinkedHashMap<String, Integer>();
+        Map<String, Integer> methodNames = new LinkedHashMap<>();
         List<Label> disposerTryLabels = null;
         Label disposerGotoLabel = null;
 
@@ -286,7 +286,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
                     invokeBuilder.returnValue(TypeDesc.INT);
                 } else {
                     if (disposerTryLabels == null) {
-                        disposerTryLabels = new ArrayList<Label>();
+                        disposerTryLabels = new ArrayList<>();
                     }
 
                     disposerTryLabels.add(invokeBuilder.createLabel().setLocation());
@@ -1095,7 +1095,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
 
     private Class[] declaredExceptionTypes(RemoteMethod method) {
         Set<? extends RemoteParameter> all = method.getExceptionTypes();
-        List<Class> declared = new ArrayList<Class>(all.size());
+        List<Class> declared = new ArrayList<>(all.size());
 
         for (RemoteParameter p : all) {
             Class type = p.getType();

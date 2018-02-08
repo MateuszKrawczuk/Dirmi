@@ -281,7 +281,7 @@ public class TestBatchedMethods extends AbstractTestSuite {
         private final BlockingQueue<String> mQueue;
 
         Listener() {
-            mQueue = new LinkedBlockingQueue<String>();
+            mQueue = new LinkedBlockingQueue<>();
         }
 
         public synchronized void started(String name, String op) {

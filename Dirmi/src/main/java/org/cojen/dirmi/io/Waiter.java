@@ -36,7 +36,7 @@ class Waiter<C extends Closeable> {
         AVAILABLE = 1, CLOSED = 2, INTERRUPTED = 3, TIMEOUT = 4, EXCEPTION = 5;
 
     static <C extends Closeable> Waiter<C> create() {
-        return new Waiter<C>();
+        return new Waiter<>();
     }
 
     private C mObject;

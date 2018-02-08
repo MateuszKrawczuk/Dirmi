@@ -32,7 +32,7 @@ public abstract class Cache<K, V> {
             return Inner.newSoftValueCache(capacity);
         } catch (NoClassDefFoundError e) {
             // Use older class for compatibility.
-            return wrap(new org.cojen.util.SoftValuedHashMap<K, V>(capacity));
+            return wrap(new org.cojen.util.SoftValuedHashMap<>(capacity));
         }
     }
 
@@ -41,7 +41,7 @@ public abstract class Cache<K, V> {
             return Inner.newWeakValueCache(capacity);
         } catch (NoClassDefFoundError e) {
             // Use older class for compatibility.
-            return wrap(new org.cojen.util.WeakValuedHashMap<K, V>(capacity));
+            return wrap(new org.cojen.util.WeakValuedHashMap<>(capacity));
         }
     }
 
@@ -50,7 +50,7 @@ public abstract class Cache<K, V> {
             return Inner.newWeakIdentityCache(capacity);
         } catch (NoClassDefFoundError e) {
             // Use older class for compatibility.
-            return wrap(new org.cojen.util.WeakIdentityMap<K, V>(capacity));
+            return wrap(new org.cojen.util.WeakIdentityMap<>(capacity));
         }
     }
 
@@ -73,15 +73,15 @@ public abstract class Cache<K, V> {
         // found. Also, signatures don't expose new classes.
 
         static <K, V> Cache<K, V> newSoftValueCache(int capacity) {
-            return wrap(new org.cojen.util.SoftValueCache<K, V>(capacity));
+            return wrap(new org.cojen.util.SoftValueCache<>(capacity));
         }
 
         static <K, V> Cache<K, V> newWeakValueCache(int capacity) {
-            return wrap(new org.cojen.util.WeakValueCache<K, V>(capacity));
+            return wrap(new org.cojen.util.WeakValueCache<>(capacity));
         }
 
         static <K, V> Cache<K, V> newWeakIdentityCache(int capacity) {
-            return wrap(new org.cojen.util.WeakIdentityCache<K, V>(capacity));
+            return wrap(new org.cojen.util.WeakIdentityCache<>(capacity));
         }
 
         private static <K, V> Cache<K, V> wrap(final org.cojen.util.Cache<K, V> cache) {

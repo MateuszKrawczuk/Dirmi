@@ -57,8 +57,8 @@ class ListenerQueue<L> {
             throw new Error(e);
         }
 
-        mListenerQueue = new LinkedList<L>();
-        mHandoffQueue = new LinkedList<Handoff>();
+        mListenerQueue = new LinkedList<>();
+        mHandoffQueue = new LinkedList<>();
     }
 
     /**

@@ -266,7 +266,7 @@ public class InvocationInputStream extends InputStream implements InvocationInpu
 
             int chainLength = readVarUnsignedInteger();
             // Element zero is root cause.
-            chain = new ArrayList<ThrowableInfo>(chainLength);
+            chain = new ArrayList<>(chainLength);
 
             for (int i=0; i<chainLength; i++) {
                 chain.add(new ThrowableInfo(in));
@@ -354,7 +354,7 @@ public class InvocationInputStream extends InputStream implements InvocationInpu
     }
 
     private StackTraceElement[] localTrace(String serverLocalAddress, String serverRemoteAddress) {
-        List<StackTraceElement> trace = new ArrayList<StackTraceElement>();
+        List<StackTraceElement> trace = new ArrayList<>();
 
         // Add some fake traces which clearly indicate that a method was
         // invoked remotely. Also include any addresses.

@@ -148,8 +148,8 @@ class RemoteTypeResolver implements ClassResolver {
 
         // Possibly create a synthetic type to match what server offers. Use
         // TreeSet to ensure consistent ordering.
-        Set<String> nameSet = new TreeSet<String>(info.getInterfaceNames());
-        Set<Class> ifaceSet = new LinkedHashSet<Class>(nameSet.size());
+        Set<String> nameSet = new TreeSet<>(info.getInterfaceNames());
+        Set<Class> ifaceSet = new LinkedHashSet<>(nameSet.size());
 
         for (String name : nameSet) {
             if (name.equals(Remote.class.getName())) {
@@ -188,7 +188,7 @@ class RemoteTypeResolver implements ClassResolver {
         cf.addInterface(Remote.class);
         TypeDesc exType = TypeDesc.forClass(RemoteException.class);
 
-        Set<String> methodsAdded = new HashSet<String>();
+        Set<String> methodsAdded = new HashSet<>();
 
         for (Class iface : ifaceSet) {
             cf.addInterface(iface);
@@ -319,7 +319,7 @@ class RemoteTypeResolver implements ClassResolver {
 
         Loader(StandardSession.Hidden.Admin admin) {
             mAdminRef = admin == null ? null
-                : new WeakReference<StandardSession.Hidden.Admin>(admin);
+                : new WeakReference<>(admin);
         }
 
         @Override

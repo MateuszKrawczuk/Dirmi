@@ -77,13 +77,13 @@ public class TracedMethod {
         }
         b.append('(');
 
-        mClass = new WeakReference<Class>(clazz);
+        mClass = new WeakReference<>(clazz);
         mMethodName = methodName;
 
         if (returnType == null) {
             mReturnType = null;
         } else {
-            mReturnType = new WeakReference<Class>(returnType);
+            mReturnType = new WeakReference<>(returnType);
         }
 
         if (paramTypes == null || paramTypes.length == 0) {
@@ -100,7 +100,7 @@ public class TracedMethod {
                     b.append(TypeDesc.forClass(paramType).getFullName());
                     any = true;
                 }
-                mParamTypes[i] = paramType == null ? mClass : new WeakReference<Class>(paramType);
+                mParamTypes[i] = paramType == null ? mClass : new WeakReference<>(paramType);
             }
         }
 

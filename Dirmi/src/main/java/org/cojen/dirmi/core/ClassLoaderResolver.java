@@ -33,7 +33,7 @@ class ClassLoaderResolver implements ClassResolver {
 
     ClassLoaderResolver(ClassLoader loader) {
         mLoader = loader;
-        mCache = new SoftValueCache<String, Class<?>>(101);
+        mCache = new SoftValueCache<>(101);
     }
 
     public Class<?> resolveClass(String name) throws ClassNotFoundException {

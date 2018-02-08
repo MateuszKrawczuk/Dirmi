@@ -276,21 +276,21 @@ public class StandardSession implements Session {
         mBroker = broker;
         mExecutor = executor;
         mDescriptorCache = new ClassDescriptorCache(executor);
-        mReferenceQueue = new ReferenceQueue<Object>();
+        mReferenceQueue = new ReferenceQueue<>();
 
-        mSkeletonFactories = new ConcurrentHashMap<VersionedIdentifier, SkeletonFactory>();
+        mSkeletonFactories = new ConcurrentHashMap<>();
         mRemoteSkeletonFactories = Cache.newSoftValueCache(17);
-        mSkeletons = new ConcurrentHashMap<VersionedIdentifier, Skeleton>();
+        mSkeletons = new ConcurrentHashMap<>();
         mSkeletonSupport = new SkeletonSupportImpl();
 
         mStubFactories = Cache.newSoftValueCache(17);
-        mStubFactoryRefs = new ConcurrentHashMap<VersionedIdentifier, StubFactoryRef>();
+        mStubFactoryRefs = new ConcurrentHashMap<>();
         mStubs = Cache.newWeakValueCache(17);
-        mStubRefs = new ConcurrentHashMap<VersionedIdentifier, StubRef>();
+        mStubRefs = new ConcurrentHashMap<>();
 
-        mChannelPool = new LinkedList<InvocationChan>();
-        mLocalChannel = new ThreadLocal<InvocationChannel>();
-        mHeldChannelMap = Collections.synchronizedMap(new HashMap<InvocationChannel, Thread>());
+        mChannelPool = new LinkedList<>();
+        mLocalChannel = new ThreadLocal<>();
+        mHeldChannelMap = Collections.synchronizedMap(new HashMap<>());
 
         // Accept bootstrap request which replies with server and admin objects.
         class Bootstrap implements ChannelAcceptor.Listener {
@@ -587,7 +587,7 @@ public class StandardSession implements Session {
         ArrayList<InvocationChannel> channels;
         synchronized (mChannelPool) {
             // Copy to avoid holding lock while flushing.
-            channels = new ArrayList<InvocationChannel>(mChannelPool);
+            channels = new ArrayList<>(mChannelPool);
         }
 
         synchronized (mHeldChannelMap) {
@@ -686,7 +686,7 @@ public class StandardSession implements Session {
                 // Discard channels for which remote endpoint is read blocked.
                 ArrayList<InvocationChan> toDiscard;
                 synchronized (mChannelPool) {
-                    toDiscard = new ArrayList<InvocationChan>(mChannelPool);
+                    toDiscard = new ArrayList<>(mChannelPool);
                     mChannelPool.clear();
                 }
 
@@ -842,7 +842,7 @@ public class StandardSession implements Session {
 
         while (true) {
             // Gather batch of stubs to be disposed.
-            ArrayList<VersionedIdentifier> disposedList = new ArrayList<VersionedIdentifier>();
+            ArrayList<VersionedIdentifier> disposedList = new ArrayList<>();
 
             Reference<?> ref;
             while (disposedList.size() < DISPOSE_BATCH && (ref = mReferenceQueue.poll()) != null) {
@@ -1744,7 +1744,7 @@ public class StandardSession implements Session {
                         if (!entry.getValue().isAlive()) {
                             InvocationChannel channel = entry.getKey();
                             if (released == null) {
-                                released = new ArrayList<InvocationChannel>();
+                                released = new ArrayList<>();
                             }
                             released.add(channel);
                             it.remove();

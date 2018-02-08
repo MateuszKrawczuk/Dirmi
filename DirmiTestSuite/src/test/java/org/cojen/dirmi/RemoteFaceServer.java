@@ -57,7 +57,7 @@ public class RemoteFaceServer implements RemoteFace, SessionAware {
     public List<String> calculate(int param, Integer p2, String message, List<String> params)
         throws RemoteException
     {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         list.add(String.valueOf(param));
         list.add(String.valueOf(p2));
         list.add(message);

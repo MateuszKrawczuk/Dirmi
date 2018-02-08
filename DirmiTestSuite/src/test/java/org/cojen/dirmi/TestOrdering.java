@@ -87,7 +87,7 @@ public class TestOrdering extends AbstractTestSuite {
         final RemoteOrdered ordered = (RemoteOrdered) sessionStrategy.remoteServer;
 
         final AtomicInteger sequence = new AtomicInteger();
-        final AtomicReference<Exception> ex = new AtomicReference<Exception>();
+        final AtomicReference<Exception> ex = new AtomicReference<>();
 
         final int count = 500;
 
@@ -129,7 +129,7 @@ public class TestOrdering extends AbstractTestSuite {
         final RemoteOrdered ordered = (RemoteOrdered) sessionStrategy.remoteServer;
 
         final AtomicInteger sequence = new AtomicInteger();
-        final AtomicReference<Exception> ex = new AtomicReference<Exception>();
+        final AtomicReference<Exception> ex = new AtomicReference<>();
 
         final Pipe[] pipes = new Pipe[10];
         final Thread[] threads = new Thread[pipes.length];

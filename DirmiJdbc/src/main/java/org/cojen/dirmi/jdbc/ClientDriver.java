@@ -70,7 +70,7 @@ public class ClientDriver implements Driver {
 
     private ClientDriver() {
         mEnvironment = new Environment();
-        mSessions = new HashMap<String, Session>();
+        mSessions = new HashMap<>();
         mSessionsLock = new ReentrantReadWriteLock();
     }
 

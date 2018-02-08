@@ -466,7 +466,7 @@ public class Environment implements Closeable {
         // Copy to avoid holding lock during close.
         List<Closeable> closeable;
         synchronized (mCloseableSet) {
-            closeable = new ArrayList<Closeable>(mCloseableSet.size());
+            closeable = new ArrayList<>(mCloseableSet.size());
             mCloseableSet.copyKeysInto(closeable);
             mCloseableSet.clear();
         }

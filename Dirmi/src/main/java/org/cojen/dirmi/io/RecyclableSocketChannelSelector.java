@@ -65,7 +65,7 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
         }
         mExecutor = executor;
         mSelector = selector;
-        mQueue = new ConcurrentLinkedQueue<Selectable>();
+        mQueue = new ConcurrentLinkedQueue<>();
     }
 
     /**
@@ -375,8 +375,8 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
             mLocalAddress = ssc.socket().getLocalSocketAddress();
             mChannel = ssc;
             mContext = AccessController.getContext();
-            mAccepted = new CloseableGroup<Channel>();
-            mAcceptQueue = new ConcurrentLinkedQueue<Channel>();
+            mAccepted = new CloseableGroup<>();
+            mAcceptQueue = new ConcurrentLinkedQueue<>();
         }
 
         @Override
@@ -542,7 +542,7 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
             mRemoteAddress = remoteAddress;
             mLocalAddress = localAddress;
             mContext = AccessController.getContext();
-            mConnected = new CloseableGroup<Channel>();
+            mConnected = new CloseableGroup<>();
         }
 
         @Override

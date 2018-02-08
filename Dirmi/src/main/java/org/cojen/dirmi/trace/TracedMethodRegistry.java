@@ -29,7 +29,7 @@ class TracedMethodRegistry {
     private int mNextId;
 
     public TracedMethodRegistry() {
-        mMethodMap = new IntHashMap<TracedMethod>();
+        mMethodMap = new IntHashMap<>();
     }
 
     /**

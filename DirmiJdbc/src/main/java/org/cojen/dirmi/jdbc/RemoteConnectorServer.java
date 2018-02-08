@@ -32,7 +32,7 @@ public class RemoteConnectorServer implements RemoteConnector {
     private final Map<String, DataSource> mDataSources;
 
     public RemoteConnectorServer(Map<String, DataSource> dataSources) {
-        mDataSources = new HashMap<String, DataSource>(dataSources);
+        mDataSources = new HashMap<>(dataSources);
     }
 
     public RemoteConnection getConnection(String db) throws SQLException {

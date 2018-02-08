@@ -36,7 +36,7 @@ public class RemoteBatchedServer implements RemoteBatched {
     }
 
     public RemoteBatchedServer(String name) {
-        this(name, new ArrayList<TaskListener>());
+        this(name, new ArrayList<>());
     }
 
     public RemoteBatchedServer(String name, List<TaskListener> listeners) {
@@ -98,7 +98,7 @@ public class RemoteBatchedServer implements RemoteBatched {
         // Do nothing.
     }
 
-    private final ThreadLocal<Object> mLast = new ThreadLocal<Object>();
+    private final ThreadLocal<Object> mLast = new ThreadLocal<>();
 
     public Completion<Boolean> testStreamReset(Object a) {
         boolean b = mLast.get() == a;

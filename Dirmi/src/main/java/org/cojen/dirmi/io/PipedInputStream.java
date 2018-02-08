@@ -167,7 +167,7 @@ public class PipedInputStream extends InputStream {
 
             Queue<Channel.Listener> queue = mListenerQueue;
             if (queue == null) {
-                mListenerQueue = queue = new LinkedList<Channel.Listener>();
+                mListenerQueue = queue = new LinkedList<>();
             }
 
             queue.add(new Channel.Listener() {

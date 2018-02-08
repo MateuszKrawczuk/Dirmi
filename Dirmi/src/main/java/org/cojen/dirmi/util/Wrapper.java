@@ -171,9 +171,9 @@ public class Wrapper<B, D> {
 
         Iterable<Method> abstractMethods;
         {
-            Map<Object, Method> abstractMethodMap = new HashMap<Object, Method>();
-            gatherAbstractMethods(baseType, new HashSet<Class>(),
-                                  new HashMap<Object, Method>(), abstractMethodMap);
+            Map<Object, Method> abstractMethodMap = new HashMap<>();
+            gatherAbstractMethods(baseType, new HashSet<>(),
+                    new HashMap<>(), abstractMethodMap);
             abstractMethods = abstractMethodMap.values();
         }
 
@@ -287,7 +287,7 @@ public class Wrapper<B, D> {
     private static List<Constructor> gatherConstructors
         (Class<?> baseType, Class<?> delegateType)
     {
-        List<Constructor> ctors = new ArrayList<Constructor>();
+        List<Constructor> ctors = new ArrayList<>();
 
         outer: for (Constructor ctor : baseType.getDeclaredConstructors()) {
             int modifiers = ctor.getModifiers();

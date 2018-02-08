@@ -134,7 +134,7 @@ public class TestSyncMethods extends AbstractTestSuite {
         RemoteFace face = (RemoteFace) sessionStrategy.remoteServer;
         assertFalse(face instanceof RemoteFaceServer);
 
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         params.add("a");
         params.add("b");
 

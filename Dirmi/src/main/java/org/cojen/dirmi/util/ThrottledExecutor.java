@@ -51,7 +51,7 @@ public class ThrottledExecutor implements Executor {
         }
         mPermits = permits;
         mMaxQueued = maxQueued;
-        mQueue = new LinkedList<Runnable>();
+        mQueue = new LinkedList<>();
     }
 
     /**

@@ -70,10 +70,10 @@ public class PipedChannelBroker implements ChannelBroker {
     private PipedChannelBroker(IOExecutor executor, int bufferSize) {
         mExecutor = executor;
         mBufferSize = bufferSize;
-        mAllChannels = new CloseableGroup<Channel>();
+        mAllChannels = new CloseableGroup<>();
 
-        mAcceptListenerQueue = new ListenerQueue<ChannelAcceptor.Listener>
-            (mExecutor, ChannelAcceptor.Listener.class);
+        mAcceptListenerQueue = new ListenerQueue<>
+                (mExecutor, ChannelAcceptor.Listener.class);
     }
 
     private PipedChannelBroker(IOExecutor executor, int bufferSize, PipedChannelBroker endpoint) {

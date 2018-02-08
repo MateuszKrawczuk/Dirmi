@@ -253,7 +253,7 @@ public class OrderedInvoker implements Closeable {
 
     private void addPendingOp(SequencedOp op) {
         if (mPendingOps == null) {
-            mPendingOps = new PriorityQueue<SequencedOp>();
+            mPendingOps = new PriorityQueue<>();
         }
         mPendingOps.add(op);
     }

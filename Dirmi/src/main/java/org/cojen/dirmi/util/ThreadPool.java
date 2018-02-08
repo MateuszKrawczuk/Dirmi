@@ -128,10 +128,10 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
         mHandler = handler;
 
         mMax = max;
-        mPool = new LinkedList<PooledThread>();
-        mAllThreads = new HashSet<PooledThread>();
+        mPool = new LinkedList<>();
+        mAllThreads = new HashSet<>();
 
-        mScheduledTasks = new TreeSet<Task>();
+        mScheduledTasks = new TreeSet<>();
     }
 
     @Override
@@ -243,12 +243,12 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
 
     @Override
     public ScheduledFuture<?> schedule(final Runnable command, long delay, TimeUnit unit) {
-        return new Task<Object>(Executors.callable(command), delay, 0, unit);
+        return new Task<>(Executors.callable(command), delay, 0, unit);
     }
 
     @Override
     public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
-        return new Task<V>(callable, delay, 0, unit);
+        return new Task<>(callable, delay, 0, unit);
     }
 
     @Override
@@ -260,7 +260,7 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
         if (period <= 0) {
             throw new IllegalArgumentException();
         }
-        return new Task<Object>(Executors.callable(command), initialDelay, period, unit);
+        return new Task<>(Executors.callable(command), initialDelay, period, unit);
     }
 
     /**
@@ -281,9 +281,9 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
         }
         Callable<Object> callable = Executors.callable(command);
         if (lowPeriod == highPeriod) {
-            return new Task<Object>(callable, initialDelay, lowPeriod, unit);
+            return new Task<>(callable, initialDelay, lowPeriod, unit);
         } else {
-            return new JitterTask<Object>(callable, initialDelay, lowPeriod, highPeriod, unit);
+            return new JitterTask<>(callable, initialDelay, lowPeriod, highPeriod, unit);
         }
     }
 
@@ -296,7 +296,7 @@ public class ThreadPool extends AbstractExecutorService implements ScheduledExec
         if (delay <= 0) {
             throw new IllegalArgumentException();
         }
-        return new Task<Object>(Executors.callable(command), initialDelay, -delay, unit);
+        return new Task<>(Executors.callable(command), initialDelay, -delay, unit);
     }
 
     @Override

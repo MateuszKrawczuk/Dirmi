@@ -40,7 +40,7 @@ import org.cojen.util.IntHashMap;
 public abstract class ScopedTraceHandler implements TraceHandler {
 
     private final TraceToolbox mToolbox;
-    private final ThreadLocal<Scope> mCurrentScope = new ThreadLocal<Scope>();
+    private final ThreadLocal<Scope> mCurrentScope = new ThreadLocal<>();
 
     public ScopedTraceHandler(TraceToolbox toolbox) {
         mToolbox = toolbox;
@@ -200,8 +200,8 @@ public abstract class ScopedTraceHandler implements TraceHandler {
             mToolbox = toolbox;
             mParent = parent;
             mThread = thread;
-            mMethodDataMap = new IntHashMap<MethodData>();
-            mMethodDataSequence = new ArrayList<MethodData>();
+            mMethodDataMap = new IntHashMap<>();
+            mMethodDataSequence = new ArrayList<>();
         }
 
         /**
@@ -367,7 +367,7 @@ public abstract class ScopedTraceHandler implements TraceHandler {
 
         void put(String key, Object value) {
             if (mExtraData == null) {
-                mExtraData = new HashMap<String, Object>();
+                mExtraData = new HashMap<>();
             }
             mExtraData.put(key, value);
         }

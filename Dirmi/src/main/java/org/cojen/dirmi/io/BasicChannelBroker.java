@@ -73,10 +73,10 @@ abstract class BasicChannelBroker implements ChannelBroker {
     {
         mId = id;
         mControl = control;
-        mAllChannels = new CloseableGroup<Channel>();
+        mAllChannels = new CloseableGroup<>();
 
-        mListenerQueue = new ListenerQueue<ChannelAcceptor.Listener>
-            (executor, ChannelAcceptor.Listener.class);
+        mListenerQueue = new ListenerQueue<>
+                (executor, ChannelAcceptor.Listener.class);
 
         // Buffers only need to be large enough for command and broker id.
         control.setInputBufferSize(10);
@@ -250,7 +250,7 @@ abstract class BasicChannelBroker implements ChannelBroker {
         private volatile Future<?> mScheduled;
 
         PingTask(BasicChannelBroker broker) {
-            mBrokerRef = new WeakReference<BasicChannelBroker>(broker);
+            mBrokerRef = new WeakReference<>(broker);
         }
 
         protected void doRun() {

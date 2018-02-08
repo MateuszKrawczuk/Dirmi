@@ -175,7 +175,7 @@ public class RemoteIntrospector {
                     ("Remote interface cannot extend java.io.Serializable: " + remote.getName());
             }
 
-            SortedMap<String, RMethod> methodMap = new TreeMap<String, RMethod>();
+            SortedMap<String, RMethod> methodMap = new TreeMap<>();
 
             for (Method m : remote.getMethods()) {
                 if (!m.getDeclaringClass().isInterface() || isObjectMethod(m)) {
@@ -256,10 +256,10 @@ public class RemoteIntrospector {
             }
 
             // Gather all implemented interfaces which implement Remote.
-            SortedSet<String> interfaces = new TreeSet<String>();
+            SortedSet<String> interfaces = new TreeSet<>();
             gatherRemoteInterfaces(interfaces, remote);
 
-            info = new RInfo(remote, interfaces, new LinkedHashSet<RMethod>(methodMap.values()));
+            info = new RInfo(remote, interfaces, new LinkedHashSet<>(methodMap.values()));
 
             cInfoCache.put(remote, info);
 
@@ -373,13 +373,13 @@ public class RemoteIntrospector {
 
         public Set<? extends RemoteMethod> getRemoteMethods(String name) {
             if (mMethodsByName == null) {
-                Map<String, Set<RMethod>> methodsByName = new HashMap<String, Set<RMethod>>();
+                Map<String, Set<RMethod>> methodsByName = new HashMap<>();
 
                 for (RMethod method : mMethods) {
                     String methodName = method.getName();
                     Set<RMethod> set = methodsByName.get(methodName);
                     if (set == null) {
-                        set = new LinkedHashSet<RMethod>();
+                        set = new LinkedHashSet<>();
                         methodsByName.put(methodName, set);
                     }
                     set.add(method);
@@ -466,7 +466,7 @@ public class RemoteIntrospector {
         }
 
         void resolve() {
-            Set<Class> validExceptions = new HashSet<Class>();
+            Set<Class> validExceptions = new HashSet<>();
             for (RMethod method : mMethods) {
                 method.resolve(this, validExceptions);
             }
@@ -623,7 +623,7 @@ public class RemoteIntrospector {
             if (paramsTypes == null || paramsTypes.length == 0) {
                 mParameterTypes = null;
             } else {
-                mParameterTypes = new ArrayList<RParameter<Object>>(paramsTypes.length);
+                mParameterTypes = new ArrayList<>(paramsTypes.length);
                 Annotation[][] paramsAnns = m.getParameterAnnotations();
 
                 // First pass, find any timeout and unit parameters.
@@ -707,7 +707,7 @@ public class RemoteIntrospector {
             if (exceptionTypes == null || exceptionTypes.length == 0) {
                 mExceptionTypes = null;
             } else {
-                SortedSet<RParameter<Throwable>> set = new TreeSet<RParameter<Throwable>>();
+                SortedSet<RParameter<Throwable>> set = new TreeSet<>();
                 for (Class exceptionType : exceptionTypes) {
                     if (!Modifier.isPublic(exceptionType.getModifiers())) {
                         throw new IllegalArgumentException
@@ -960,7 +960,7 @@ public class RemoteIntrospector {
                      methodDesc() + " and " + other.methodDesc());
             }
 
-            SortedSet<RParameter<Throwable>> subset = new TreeSet<RParameter<Throwable>>();
+            SortedSet<RParameter<Throwable>> subset = new TreeSet<>();
 
             for (RParameter exceptionType : mExceptionTypes) {
                 if (other.declaresException(exceptionType)) {
@@ -1198,7 +1198,7 @@ public class RemoteIntrospector {
                 (timeout ? FLAG_TIMEOUT : 0) |
                 (timeoutUnit ? FLAG_TIMEOUT_UNIT : 0);
 
-            return intern(new RParameter<T>(type, flags));
+            return intern(new RParameter<>(type, flags));
         }
 
         private final Class<T> mType;

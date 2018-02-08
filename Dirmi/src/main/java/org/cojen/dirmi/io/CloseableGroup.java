@@ -36,7 +36,7 @@ public class CloseableGroup<C extends Closeable> implements Closeable {
     private boolean mClosed;
 
     public CloseableGroup() {
-        mGroup = new HashMap<C, Object>();
+        mGroup = new HashMap<>();
     }
 
     public synchronized boolean isClosed() {
@@ -91,7 +91,7 @@ public class CloseableGroup<C extends Closeable> implements Closeable {
         Map<C, Object> copy;
         synchronized (this) {
             mClosed = true;
-            copy = new HashMap<C, Object>(mGroup);
+            copy = new HashMap<>(mGroup);
             mGroup.clear();
         }
 
@@ -111,7 +111,7 @@ public class CloseableGroup<C extends Closeable> implements Closeable {
         Map<C, Object> copy;
         synchronized (this) {
             mClosed = true;
-            copy = new HashMap<C, Object>(mGroup);
+            copy = new HashMap<>(mGroup);
             mGroup.clear();
         }
 

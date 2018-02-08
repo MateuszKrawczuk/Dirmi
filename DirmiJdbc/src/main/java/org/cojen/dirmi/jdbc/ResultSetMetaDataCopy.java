@@ -121,7 +121,7 @@ public class ResultSetMetaDataCopy implements ResultSetMetaData, Serializable {
     public int findColumn(String columnName) throws SQLException {
         Map<String, Integer> columnMap = mColumnMap;
         if (columnMap == null) {
-            columnMap = new LinkedHashMap<String, Integer>();
+            columnMap = new LinkedHashMap<>();
             String[] names = mNames;
             for (int i=0; i<names.length; i++) {
                 columnMap.put(names[i], i + 1);

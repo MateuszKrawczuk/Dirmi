@@ -51,7 +51,7 @@ public class BasicChannelBrokerConnector implements ChannelBrokerConnector {
     public BasicChannelBrokerConnector(IOExecutor executor, ChannelConnector connector) {
         mExecutor = executor;
         mConnector = connector;
-        mConnectedBrokers = new CloseableGroup<Broker>();
+        mConnectedBrokers = new CloseableGroup<>();
     }
 
     @Override

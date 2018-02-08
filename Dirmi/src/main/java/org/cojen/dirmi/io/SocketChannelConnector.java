@@ -89,7 +89,7 @@ abstract class SocketChannelConnector implements ChannelConnector {
         mLocalAddress = localAddress;
         mFactory = factory;
         mContext = AccessController.getContext();
-        mConnected = new CloseableGroup<Channel>();
+        mConnected = new CloseableGroup<>();
     }
 
     @Override

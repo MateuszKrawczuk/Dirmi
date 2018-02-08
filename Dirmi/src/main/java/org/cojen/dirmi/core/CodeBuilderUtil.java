@@ -423,6 +423,6 @@ class CodeBuilderUtil {
 
     // Put ThreadLocal in a public class to be accessible by generated code.
     public static class Local {
-        public static final ThreadLocal<Object> value = new ThreadLocal<Object>();
+        public static final ThreadLocal<Object> value = new ThreadLocal<>();
     }
 }

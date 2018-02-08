@@ -43,7 +43,7 @@ public class ResultSetRowFetcherServer implements ResultSetRowFetcher {
     public ResultSetRowFetcherServer(ResultSet rs, ResultSetMetaData md) {
         mResultSet = rs;
         mMetaData = md;
-        mRowQueue = new ArrayBlockingQueue<Object>(1000);
+        mRowQueue = new ArrayBlockingQueue<>(1000);
 
         // FIXME: use thread pool
         new Thread() {

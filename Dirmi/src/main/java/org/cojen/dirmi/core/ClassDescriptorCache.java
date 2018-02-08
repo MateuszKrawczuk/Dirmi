@@ -140,7 +140,7 @@ class ClassDescriptorCache {
 
                 Map<Key, ObjectStreamClass> requested = mRequestedReferences;
                 if (requested == null) {
-                    mRequestedReferences = requested = new HashMap<Key, ObjectStreamClass>();
+                    mRequestedReferences = requested = new HashMap<>();
                 }
 
                 if (requested.put(key, desc) == null) {
@@ -198,7 +198,7 @@ class ClassDescriptorCache {
 
                 Map<Key, Future> inFlight = mInFlightRequests;
                 if (inFlight == null) {
-                    mInFlightRequests = inFlight = new HashMap<Key, Future>();
+                    mInFlightRequests = inFlight = new HashMap<>();
                 }
 
                 refs = new ReferenceTransport[requested.size()];

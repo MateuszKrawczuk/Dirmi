@@ -76,7 +76,7 @@ abstract class SocketChannelAcceptor implements ChannelAcceptor {
         serverSocket.bind(localAddress, LISTEN_BACKLOG);
         mLocalAddress = serverSocket.getLocalSocketAddress();
         mContext = AccessController.getContext();
-        mAccepted = new CloseableGroup<Channel>();
+        mAccepted = new CloseableGroup<>();
     }
     
     @Override

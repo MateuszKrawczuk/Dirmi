@@ -214,7 +214,7 @@ public class InvocationOutputStream extends OutputStream implements InvocationOu
         // Throwable, and then write serialized Throwable. If a
         // NotSerializableException is thrown, at least caller got some info.
 
-        List<Throwable> chain = new ArrayList<Throwable>(8);
+        List<Throwable> chain = new ArrayList<>(8);
         // Element zero is root cause.
         collectChain(chain, t);
 

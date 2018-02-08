@@ -49,7 +49,7 @@ import java.security.SecureRandom;
  */
 public class TraceAgent {
     private static final Random cRandom = new SecureRandom();
-    private static final Map<Long, TraceAgent> cAgents = new HashMap<Long, TraceAgent>();
+    private static final Map<Long, TraceAgent> cAgents = new HashMap<>();
 
     /**
      * Premain method, as required by instrumentation agents.

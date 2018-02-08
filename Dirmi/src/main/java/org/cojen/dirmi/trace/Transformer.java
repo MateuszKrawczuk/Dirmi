@@ -131,7 +131,7 @@ class Transformer implements ClassFileTransformer {
             return null;
         }
 
-        Map<MethodInfo, MidAndOp> transformedMethods = new HashMap<MethodInfo, MidAndOp>();
+        Map<MethodInfo, MidAndOp> transformedMethods = new HashMap<>();
 
         for (MethodInfo mi : cf.getMethods()) {
             tryTransform(modes, transformedMethods, mi);

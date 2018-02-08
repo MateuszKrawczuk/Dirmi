@@ -55,7 +55,7 @@ public class TestListenerQueue {
 
     @Test
     public void enqueueFirst() throws Exception {
-        ListenerQueue<Listener> queue = new ListenerQueue<Listener>(mExecutor, Listener.class);
+        ListenerQueue<Listener> queue = new ListenerQueue<>(mExecutor, Listener.class);
         ListenerImpl listener = new ListenerImpl();
         queue.enqueue(listener);
         queue.dequeue().hello();
@@ -65,7 +65,7 @@ public class TestListenerQueue {
 
     @Test
     public void dequeueFirst() throws Exception {
-        ListenerQueue<Listener> queue = new ListenerQueue<Listener>(mExecutor, Listener.class);
+        ListenerQueue<Listener> queue = new ListenerQueue<>(mExecutor, Listener.class);
         queue.dequeue().hello();
         ListenerImpl listener = new ListenerImpl();
         queue.enqueue(listener);
@@ -76,11 +76,11 @@ public class TestListenerQueue {
     @Test
     public void chaos() throws Exception {
         final ListenerQueue<Listener> queue =
-            new ListenerQueue<Listener>(mExecutor, Listener.class);
+                new ListenerQueue<>(mExecutor, Listener.class);
 
         final int count = 100000;
 
-        final List<ListenerImpl> listeners = new Vector<ListenerImpl>();
+        final List<ListenerImpl> listeners = new Vector<>();
 
         final AtomicInteger extraStop = new AtomicInteger();
 
@@ -169,7 +169,7 @@ public class TestListenerQueue {
 
     @Test
     public void enqueueFirstAndClose() throws Exception {
-        ListenerQueue<Listener> queue = new ListenerQueue<Listener>(mExecutor, Listener.class);
+        ListenerQueue<Listener> queue = new ListenerQueue<>(mExecutor, Listener.class);
 
         ListenerImpl listener1 = new ListenerImpl();
         ListenerImpl listener2 = new ListenerImpl();
@@ -188,7 +188,7 @@ public class TestListenerQueue {
 
     @Test
     public void dequeueFirstAndClose() throws Exception {
-        ListenerQueue<Listener> queue = new ListenerQueue<Listener>(mExecutor, Listener.class);
+        ListenerQueue<Listener> queue = new ListenerQueue<>(mExecutor, Listener.class);
 
         queue.dequeueForClose().stop();
 
@@ -207,7 +207,7 @@ public class TestListenerQueue {
 
     @Test
     public void dequeueCloseEnqueue() throws Exception {
-        ListenerQueue<Listener> queue = new ListenerQueue<Listener>(mExecutor, Listener.class);
+        ListenerQueue<Listener> queue = new ListenerQueue<>(mExecutor, Listener.class);
 
         queue.dequeueForClose().stop();
 
