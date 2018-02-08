@@ -1006,7 +1006,7 @@ public class StandardSession implements Session {
                 } catch (StreamCorruptedException e) {
                     // Handle special case when cause is actually a closed channel.
                     String message = e.getMessage();
-                    if (message != null && message.indexOf("EOF") >= 0) {
+                    if (message != null && message.contains("EOF")) {
                         throw e;
                     }
                     throwable = e;

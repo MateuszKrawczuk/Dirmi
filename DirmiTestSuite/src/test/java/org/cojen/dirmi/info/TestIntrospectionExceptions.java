@@ -620,6 +620,6 @@ public class TestIntrospectionExceptions {
     }
 
     private void confirm(IllegalArgumentException e, String substring) {
-        assertTrue(e.getMessage().indexOf(substring) >= 0);
+        assertTrue(e.getMessage().contains(substring));
     }
 }
