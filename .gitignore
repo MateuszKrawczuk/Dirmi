@@ -1,2 +1,5 @@
 /Dirmi/maven.bat
 /Dirmi/target
+*.class
+.idea/*
+.directory
