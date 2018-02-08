@@ -75,9 +75,7 @@ public class SessionAccess {
                 return (Link) clazz.getMethod("sessionLink", clazz).invoke(null, obj);
             }
             cause = null;
-        } catch (NoSuchMethodException e) {
-            cause = e;
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchMethodException | IllegalAccessException e) {
             cause = e;
         } catch (InvocationTargetException e) {
             if ((cause = e.getCause()) == null) {
@@ -99,9 +97,7 @@ public class SessionAccess {
                 Class clazz = obj.getClass();
                 return (Link) clazz.getMethod("sessionLink", clazz).invoke(null, obj);
             }
-        } catch (NoSuchMethodException e) {
-        } catch (IllegalAccessException e) {
-        } catch (InvocationTargetException e) {
+        } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
         }
         return null;
     }

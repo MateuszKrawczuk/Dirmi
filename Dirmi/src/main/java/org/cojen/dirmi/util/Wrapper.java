@@ -127,9 +127,7 @@ public class Wrapper<B, D> {
         }
         try {
             return ctor.newInstance(delegate);
-        } catch (InstantiationException e) {
-            throw new AssertionError(e);
-        } catch (IllegalAccessException e) {
+        } catch (InstantiationException | IllegalAccessException e) {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
             ThrowUnchecked.fireDeclaredCause(e);

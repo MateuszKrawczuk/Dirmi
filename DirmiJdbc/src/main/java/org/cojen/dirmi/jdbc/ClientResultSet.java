@@ -134,10 +134,7 @@ public class ClientResultSet implements ResultSet {
         } catch (ReconstructedException e) {
             silentClose();
             throw new SQLException(e.getCause());
-        } catch (IOException e) {
-            silentClose();
-            throw new SQLException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             silentClose();
             throw new SQLException(e);
         }

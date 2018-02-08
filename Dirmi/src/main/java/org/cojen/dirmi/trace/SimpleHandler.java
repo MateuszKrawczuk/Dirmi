@@ -33,8 +33,7 @@ public class SimpleHandler extends ScopedTraceHandler {
     static {
         try {
             cDateTimeCtor = Class.forName("org.joda.time.DateTime").getConstructor(long.class);
-        } catch (ClassNotFoundException e) {
-        } catch (NoSuchMethodException e) {
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
         }
     }
 

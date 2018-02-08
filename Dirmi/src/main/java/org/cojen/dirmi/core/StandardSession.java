@@ -397,7 +397,7 @@ public class StandardSession implements Session {
                     io.initCause(e);
                     throw io;
                 }
-            } catch (SocketException e) {
+            } catch (SocketException | ClosedException e) {
                 // When the InvocationChan's timer expires, it closes the connection. That
                 // causes read and write calls to fail with a SocketException that has
                 // "Socket closed" as the message, if the connection is closed in the middle
@@ -405,10 +405,6 @@ public class StandardSession implements Session {
                 //
                 // If the timer is really what caused the connection to get closed, throw a
                 // RemoteTimeoutException instead.
-                RemoteTimeoutException.checkRemaining(timer);
-                throw e;
-            } catch (ClosedException e) {
-                // If the connection is closed between calls, a ClosedException is thrown.
                 RemoteTimeoutException.checkRemaining(timer);
                 throw e;
             }
@@ -1005,9 +1001,7 @@ public class StandardSession implements Session {
                         batchedException = e;
                         continue;
                     }
-                } catch (NoSuchMethodException e) {
-                    throwable = e;
-                } catch (NoSuchObjectException e) {
+                } catch (NoSuchMethodException | MalformedRemoteObjectException | NoSuchObjectException e) {
                     throwable = e;
                 } catch (StreamCorruptedException e) {
                     // Handle special case when cause is actually a closed channel.
@@ -1017,8 +1011,6 @@ public class StandardSession implements Session {
                     }
                     throwable = e;
                 } catch (ObjectStreamException e) {
-                    throwable = e;
-                } catch (MalformedRemoteObjectException e) {
                     throwable = e;
                 } catch (IOException e) {
                     // General IOException is treated as communication failure.
@@ -1549,9 +1541,7 @@ public class StandardSession implements Session {
             Class clazz;
             try {
                 clazz = mTypeResolver.resolveClass(name);
-            } catch (IOException e) {
-                return null;
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 return null;
             }
 

@@ -159,9 +159,7 @@ class RemoteTypeResolver implements ClassResolver {
                 Class iface = resolveClass(name);
                 RemoteIntrospector.examine(iface);
                 ifaceSet.add(iface);
-            } catch (ClassNotFoundException e) {
-                continue;
-            } catch (IllegalArgumentException e) {
+            } catch (ClassNotFoundException | IllegalArgumentException e) {
                 continue;
             }
         }

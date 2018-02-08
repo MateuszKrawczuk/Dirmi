@@ -58,9 +58,7 @@ public class ClientDriver implements Driver {
             if (SQLException.class.isAssignableFrom(clazz)) {
                 throw (SQLException) clazz.newInstance();
             }
-        } catch (ClassNotFoundException e) {
-        } catch (InstantiationException e) {
-        } catch (IllegalAccessException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InstantiationException e) {
         }
 
         throw new SQLException("unsupported");

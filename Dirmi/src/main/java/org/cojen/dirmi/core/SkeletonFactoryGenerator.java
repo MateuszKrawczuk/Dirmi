@@ -1126,9 +1126,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
                 try {
                     skeleton = mSkeletonCtor.newInstance(objId, support, remoteServer);
                     break create;
-                } catch (InstantiationException e) {
-                    error = e;
-                } catch (IllegalAccessException e) {
+                } catch (InstantiationException | IllegalAccessException e) {
                     error = e;
                 } catch (InvocationTargetException e) {
                     error = e.getCause();

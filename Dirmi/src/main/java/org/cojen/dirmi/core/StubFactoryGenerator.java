@@ -873,9 +873,7 @@ public class StubFactoryGenerator<R extends Remote> {
             Throwable error;
             try {
                 return mStubCtor.newInstance(support);
-            } catch (InstantiationException e) {
-                error = e;
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 error = e;
             } catch (InvocationTargetException e) {
                 error = e.getCause();

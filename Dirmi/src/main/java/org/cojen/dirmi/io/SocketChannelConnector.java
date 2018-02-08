@@ -184,10 +184,7 @@ abstract class SocketChannelConnector implements ChannelConnector {
 
             socket.setTcpNoDelay(true);
             return socket;
-        } catch (SecurityException e) {
-            disconnect(socket);
-            throw e;
-        } catch (IOException e) {
+        } catch (SecurityException | IOException e) {
             disconnect(socket);
             throw e;
         }
