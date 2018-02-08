@@ -102,27 +102,27 @@ public class TestThrottledExecutor {
             };
         }
 
-        for (int i=0; i<threads.length; i++) {
-            threads[i].start();
+        for (Thread thread2 : threads) {
+            thread2.start();
         }
 
         Thread.sleep(1000);
         int active = threads.length;
-        for (int i=0; i<threads.length; i++) {
-            if (!threads[i].isAlive()) {
+        for (Thread thread1 : threads) {
+            if (!thread1.isAlive()) {
                 active--;
             }
         }
 
         assertEquals(2, active);
 
-        for (int i=0; i<threads.length; i++) {
-            threads[i].join();
+        for (Thread thread : threads) {
+            thread.join();
         }
 
         int done = 0;
-        for (int i=0; i<tasks.length; i++) {
-            if (tasks[i].mDone) {
+        for (Task task : tasks) {
+            if (task.mDone) {
                 done++;
             }
         }

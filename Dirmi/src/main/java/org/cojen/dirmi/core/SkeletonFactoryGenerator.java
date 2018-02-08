@@ -387,8 +387,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
                 boolean lookForPipe = method.isAsynchronous() &&
                     returnDesc != null && Pipe.class == returnDesc.toClass();
 
-                for (int i=0; i<paramTypes.size(); i++) {
-                    RemoteParameter paramType = paramTypes.get(i);
+                for (RemoteParameter paramType : paramTypes) {
                     if (lookForPipe && Pipe.class == paramType.getType()) {
                         lookForPipe = false;
                         // Use channel as Pipe.
@@ -399,7 +398,7 @@ public class SkeletonFactoryGenerator<R extends Remote> {
                             b.loadField(SUPPORT_FIELD_NAME, SKEL_SUPPORT_TYPE);
                             b.loadLocal(channelVar);
                             b.invokeInterface(SKEL_SUPPORT_TYPE, "requestReply", returnDesc,
-                                              new TypeDesc[] {INV_CHANNEL_TYPE});
+                                    new TypeDesc[]{INV_CHANNEL_TYPE});
                         } else {
                             b.loadLocal(channelVar);
                         }

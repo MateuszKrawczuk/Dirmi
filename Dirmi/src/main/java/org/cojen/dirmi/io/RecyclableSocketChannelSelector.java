@@ -102,9 +102,7 @@ public class RecyclableSocketChannelSelector implements SocketChannelSelector {
                         }
                     }
                 } else {
-                    Iterator<SelectionKey> it = selector.selectedKeys().iterator();
-                    while (it.hasNext()) {
-                        SelectionKey key = it.next();
+                    for (SelectionKey key : selector.selectedKeys()) {
                         Selectable selected = (Selectable) key.attachment();
                         try {
                             try {

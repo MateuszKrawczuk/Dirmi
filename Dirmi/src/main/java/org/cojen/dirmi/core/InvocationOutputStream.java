@@ -224,8 +224,7 @@ public class InvocationOutputStream extends OutputStream implements InvocationOu
 
         writeVarUnsignedInt(chain.size());
 
-        for (int i=0; i<chain.size(); i++) {
-            Throwable sub = chain.get(i);
+        for (Throwable sub : chain) {
             out.writeObject(sub.getClass().getName());
             out.writeObject(sub.getMessage());
             StackTraceElement[] trace = sub.getStackTrace();

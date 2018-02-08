@@ -1001,8 +1001,8 @@ public class RemoteIntrospector {
                 // can be unshared. This is because a complex serialized object
                 // might refer to any parameter or even itself.
                 boolean noneUnshared = false;
-                for (int i=0; i<size; i++) {
-                    if (!mParameterTypes.get(i).isUnshared()) {
+                for (RParameter<Object> mParameterType : mParameterTypes) {
+                    if (!mParameterType.isUnshared()) {
                         noneUnshared = true;
                         break;
                     }
